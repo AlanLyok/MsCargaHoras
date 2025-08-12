@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace MsCargaHoras
+{
+    public partial class SiteMaster : MasterPage
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        // Flujo de aplicar desde navbar eliminado; el filtro se aplica desde la página
+    }
+}

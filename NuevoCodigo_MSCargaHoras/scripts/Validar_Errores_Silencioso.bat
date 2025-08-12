@@ -1,0 +1,1 @@
+powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Sitios\FaltanteCargaHs\NuevoCodigo_MSCargaHoras\scripts\Build-Run-MsCargaHoras.ps1" -Configuration Debug -NoRun -LogFile "C:\Sitios\FaltanteCargaHs\NuevoCodigo_MSCargaHoras\scripts\msbuild-last.log"

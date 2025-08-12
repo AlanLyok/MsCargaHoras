@@ -1,0 +1,344 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="MsCargaHoras.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="es">
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - MsCargaHoras - Carga de Horas</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <script type="text/javascript">window.AppUi = { enableToasts: false };</script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="<%: ResolveUrl("~/Content/logoMsCargaHoras_Trans.png") %>" rel="icon" type="image/png" />
+
+</head>
+<body>
+    <form runat="server">
+        <style>
+            :root{ --navbar-h: 52px; --toolbar-h: 48px; }
+            .loading-overlay { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 2000; }
+            .loading-overlay.active { display: flex; }
+            .loading-overlay .loading-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.25); backdrop-filter: blur(1px); }
+            .loading-overlay .loading-spinner { position: relative; z-index: 1; text-align: center; }
+            /* Scroll interno para tablas dentro de cards */
+            .grid-scroll { max-height: 60vh; overflow: auto; }
+            /* Barras fijas bajo la navbar (sin superponer contenido) */
+            .toolbar.sticky-top { position: fixed; left: 0; right: 0; top: var(--navbar-h); z-index: 1029; }
+            .toolbar.sticky-top.search { top: calc(var(--navbar-h) + var(--toolbar-h)); }
+            .toolbar .controls { white-space: nowrap; overflow-x: auto; }
+            /* Reservar espacio permanente para navbar + 2 toolbars para que no se mueva el contenido */
+            .body-content { padding-top: calc(var(--navbar-h) + (var(--toolbar-h) * 2)); }
+            /* Navbar compacta y logo algo más grande sin aumentar altura total */
+            .navbar.fixed-top{ padding-top: .25rem; padding-bottom: .25rem; }
+            .navbar .navbar-brand{ padding-top: 0; padding-bottom: 0; margin-right: .75rem; }
+            .navbar .navbar-brand img{ height: 32px; }
+            @media (min-width: 992px){ .navbar .navbar-brand img{ height: 34px; } }
+
+            @media (max-width: 991.98px){
+                :root{ --navbar-h: 52px; --toolbar-h: 48px; }
+                .toolbar.sticky-top{ top: var(--navbar-h); }
+                .toolbar.sticky-top.search { top: calc(var(--navbar-h) + var(--toolbar-h)); }
+            }
+        </style>
+        <div id="loadingOverlay" class="loading-overlay" aria-hidden="true">
+            <div class="loading-backdrop"></div>
+            <div class="loading-spinner" role="status" aria-label="Cargando...">
+                <div class="spinner-border text-light" role="status" aria-hidden="true"></div>
+                <div class="mt-2 text-light small">Cargando...</div>
+            </div>
+        </div>
+        <!-- Toast container (notificador) -->
+        <div aria-live="polite" aria-atomic="true" class="position-fixed" style="z-index:2100; right: 12px; top: 12px; pointer-events:none;">
+            <div id="toastContainer" class="toast-container" style="max-width: 360px; pointer-events:auto;"></div>
+        </div>
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--Para obtener más información sobre cómo agrupar scripts en ScriptManager, consulte http://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Scripts de marco--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <%-- Bootstrap bundle incluye Popper; se carga una sola vez --%>
+                <asp:ScriptReference Path="~/Scripts/bootstrap.bundle.min.js" />
+                <asp:ScriptReference Path="~/Scripts/ui-common.js" />
+                <asp:ScriptReference Path="~/Scripts/grid-enhancer.js" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <%-- Evitar duplicados: no incluir 'WebFormsBundle' si ya se referencian archivos individuales --%>
+                <%--Scripts del sitio--%>
+            </Scripts>
+        </asp:ScriptManager>
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center gap-2" runat="server" href="~/">
+                    <img src="<%: ResolveUrl("~/Content/logoMsCargaHoras_Trans.png") %>" alt="MsCargaHoras" height="46" class="rounded" />
+                    <span>MsCargaHoras</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/">Inicio</a></li>
+                    </ul>
+                    <div class="ms-auto d-flex align-items-center gap-3 flex-wrap">
+                        <div class="d-flex align-items-center gap-2">
+                            <a class="btn btn-outline-light btn-sm" href="https://mastersoftlatam.sharepoint.com/sites/Desarrollo" target="_blank" rel="noopener noreferrer" title="Abrir SharePoint Desarrollo" data-bs-toggle="tooltip">
+                                <i class="bi bi-share" aria-hidden="true"></i>
+                                <span class="d-none d-sm-inline">SharePoint Desa</span>
+                                <span class="d-inline d-sm-none">SharePoint</span>
+                            </a>
+                            <a class="btn btn-outline-light btn-sm" href="http://192.168.0.17/MSDocuments" target="_blank" rel="noopener noreferrer" title="Abrir Render DOC" data-bs-toggle="tooltip">
+                                <i class="bi bi-file-earmark-text" aria-hidden="true"></i>
+                                <span class="d-none d-sm-inline">Render DOC</span>
+                                <span class="d-inline d-sm-none">DOC</span>
+                            </a>
+                            <a class="btn btn-outline-light btn-sm" href="https://webtools.mastersoft.com.ar/" target="_blank" rel="noopener noreferrer" title="Abrir Render WebTools" data-bs-toggle="tooltip">
+                                <i class="bi bi-tools" aria-hidden="true"></i>
+                                <span class="d-none d-sm-inline">Render WebTools</span>
+                                <span class="d-inline d-sm-none">WebTools</span>
+                            </a>
+                        </div>
+                        <div class="d-none small text-light">
+                            <span class="opacity-75">Bienvenido</span>
+                            <asp:Label ID="lblNavbarNombre" runat="server" CssClass="badge bg-secondary-subtle text-dark ms-1" />
+                            <span class="badge bg-success ms-2">Legajo</span>
+                            <asp:Label ID="lblNavbarLegajo" runat="server" CssClass="badge bg-light text-dark ms-1" />
+                        </div>
+                        <div class="btn-group" role="group" aria-label="Toolbars">
+                            <button type="button" id="btnShowActionsBar" class="btn btn-outline-light btn-sm" title="Mostrar/Ocultar acciones">
+                                <i class="bi bi-bar-chart-steps"></i><span class="d-none d-md-inline ms-1"></span>
+                            </button>
+                            <button type="button" id="btnShowSearchBar" class="btn btn-outline-light btn-sm" title="Mostrar/Ocultar búsqueda">
+                                <i class="bi bi-search"></i><span class="d-none d-md-inline ms-1"></span>
+                            </button>
+                        </div>
+                        <button type="button" id="themeToggle" class="btn btn-outline-light btn-sm d-inline-flex align-items-center gap-1" aria-label="Alternar tema" data-bs-toggle="tooltip" title="Alternar tema claro/oscuro">
+                            <i class="bi bi-sun-fill" id="iconSun" aria-hidden="true"></i>
+                            <i class="bi bi-moon-stars-fill d-none" id="iconMoon" aria-hidden="true"></i>
+                            
+                        </button>
+                        <div class="dropdown">
+                            <button class="btn p-0 bg-transparent border-0 dropdown-toggle" type="button" id="btnAvatar" data-bs-toggle="dropdown" aria-expanded="false" title="Usuario">
+                                <span id="avatarInitials" class="avatar-circle text-uppercase">--</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="btnAvatar" style="min-width: 340px;">
+                                <li class="dropdown-item-text">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <img src="<%: ResolveUrl("~/Content/logoMS_Grande.png") %>" alt="Mastersoft" height="28" />
+                                            
+                                        </div>
+                                        <span class="badge bg-secondary-subtle text-dark" id="ddAppVersion">v-</span>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="dropdown-item-text"><div><strong>Nombre:</strong> <span id="ddUserNombre"></span></div></li>
+                                <li class="dropdown-item-text"><div><strong>Legajo:</strong> <span id="ddUserLegajo"></span></div></li>
+                                <li class="dropdown-item-text"><div><strong>Usuario:</strong> <span id="ddUserUsuario"></span></div></li>
+                                <li class="dropdown-item-text"><div><strong>Email:</strong> <span id="ddUserMail"></span></div></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><button type="button" class="dropdown-item" id="ddCambiarUsuarioBtn">Cambiar usuario</button></li>
+                                <li><button type="button" class="dropdown-item text-danger" id="ddLogoutBtn">Log Out</button></li>
+                            </ul>
+                            <asp:Label ID="lblUserNombre" runat="server" CssClass="d-none" />
+                            <asp:Label ID="lblUserLegajo" runat="server" CssClass="d-none" />
+                            <asp:Label ID="lblUserUsuario" runat="server" CssClass="d-none" />
+                            <asp:Label ID="lblUserMail" runat="server" CssClass="d-none" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid body-content px-3 px-md-4 px-lg-5" style="overflow-x:hidden;">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <hr />
+            <footer class="py-3">
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+                    <p class="mb-0">&copy; <%: DateTime.Now.Year %> - Mastersoft</p>
+                    <div class="d-flex align-items-center gap-2">
+                        <img src="<%: ResolveUrl("~/Content/logoMS_Grande.png") %>" alt="Mastersoft" height="48" />
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <script type="text/javascript">
+            (function(){
+                var storageKey = 'ui-theme';
+                var root = document.documentElement;
+                function apply(theme){
+                    if(theme === 'dark' || theme === 'light'){
+                        root.setAttribute('data-theme', theme);
+                    } else {
+                        root.removeAttribute('data-theme');
+                    }
+                }
+                function current(){
+                    var saved = null;
+                    try { saved = localStorage.getItem(storageKey); } catch (e) {}
+                    if(saved){ return saved; }
+                    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+                }
+                function reflectIcon(theme){
+                    var sun = document.getElementById('iconSun');
+                    var moon = document.getElementById('iconMoon');
+                    var isDark = theme === 'dark';
+                    if(sun && moon){
+                        sun.classList.toggle('d-none', isDark);
+                        moon.classList.toggle('d-none', !isDark);
+                    }
+                }
+                function toggle(){
+                    var next = current() === 'dark' ? 'light' : 'dark';
+                    apply(next);
+                    reflectIcon(next);
+                    try { localStorage.setItem(storageKey, next); } catch(e) {}
+                }
+                document.addEventListener('DOMContentLoaded', function(){
+                    var t = current();
+                    apply(t);
+                    reflectIcon(t);
+                    var btn = document.getElementById('themeToggle');
+                    if(btn){ btn.addEventListener('click', toggle); }
+                    try{
+                        var btnAvatar = document.getElementById('btnAvatar');
+                        var toHtml = function(){
+                            var nombre = (document.getElementById('<%= lblUserNombre.ClientID %>')?.innerText || '').trim();
+                            var legajo = (document.getElementById('<%= lblUserLegajo.ClientID %>')?.innerText || '').trim();
+                            var usuario = (document.getElementById('<%= lblUserUsuario.ClientID %>')?.innerText || '').trim();
+                            var mail = (document.getElementById('<%= lblUserMail.ClientID %>')?.innerText || '').trim();
+                            var html = '';
+                            if(nombre){ html += '<div><strong>Nombre:</strong> ' + nombre + '</div>'; }
+                            if(legajo){ html += '<div><strong>Legajo:</strong> ' + legajo + '</div>'; }
+                            if(usuario){ html += '<div><strong>Usuario:</strong> ' + usuario + '</div>'; }
+                            if(mail){ html += '<div><strong>Email:</strong> ' + mail + '</div>'; }
+                            return html || '<em>Sin datos</em>';
+                        };
+                        // Completar dropdown con datos actuales
+                        try{
+                          document.getElementById('ddUserNombre').innerText = nombre || '';
+                          document.getElementById('ddUserLegajo').innerText = legajo || '';
+                          document.getElementById('ddUserUsuario').innerText = usuario || '';
+                          document.getElementById('ddUserMail').innerText = mail || '';
+                        }catch(ex){}
+
+                        var initialsEl = document.getElementById('avatarInitials');
+                        var nombre = (document.getElementById('<%= lblUserNombre.ClientID %>')?.innerText || '').trim();
+                        var legajo = (document.getElementById('<%= lblUserLegajo.ClientID %>')?.innerText || '').trim();
+                        function initialsFrom(text){
+                            if(!text) return '';
+                            var words = text.replace(/\s+/g,' ').trim().split(' ');
+                            var ini = words.slice(0,2).map(function(w){ return w.charAt(0); }).join('');
+                            return ini.toUpperCase();
+                        }
+                        var ini = initialsFrom(nombre) || (legajo ? legajo : '--');
+                        if(initialsEl){ initialsEl.textContent = ini; }
+                        // Wire acciones Login/Logout a botones del dropdown
+                        try{
+                          var btnOut = document.getElementById('ddLogoutBtn');
+                          var outUid = '<%= (MainContent.FindControl("btnLogout") != null ? ((System.Web.UI.Control)MainContent.FindControl("btnLogout")).UniqueID : "") %>';
+                          if(btnOut){ btnOut.addEventListener('click', function(){ try{ if(outUid){ __doPostBack(outUid,''); } }catch(e){} }); }
+                          var btnChg = document.getElementById('ddCambiarUsuarioBtn');
+                          var chgUid = '<%= (MainContent.FindControl("btnCambiarUsuario") != null ? ((System.Web.UI.Control)MainContent.FindControl("btnCambiarUsuario")).UniqueID : "") %>';
+                          if(btnChg){ btnChg.addEventListener('click', function(){ try{ if(chgUid){ __doPostBack(chgUid,''); } }catch(e){} }); }
+                        }catch(ex){}
+                        // Inicializa tooltips navbar
+                        if(window.bootstrap){
+                             try{ var tts = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')); tts.forEach(function(el){ new bootstrap.Tooltip(el); }); }catch(e){}
+                        }
+                        // Version desde Assembly
+                        try{
+                            var ver = '<%= typeof(MsCargaHoras.SiteMaster).Assembly.GetName().Version.ToString() %>';
+                            var shortVer = ver ? ver.replace(/(\.0)+$/,'') : '';
+                            var dv = document.getElementById('ddAppVersion');
+                            if(dv && shortVer){ dv.textContent = 'v' + shortVer; }
+                        }catch(e){}
+                        // Toggle de toolbars desde navbar (acciones y búsqueda global)
+                        try{
+                            var actionsBar = document.getElementById('toolbarActions');
+                            var searchBar = document.getElementById('toolbarSearch');
+                            function saveState(key,value){ try{ localStorage.setItem(key,value); }catch(e){} }
+                            function loadState(key,def){ try{ var v = localStorage.getItem(key); return (v===null||v===undefined)?def:v; }catch(e){ return def; } }
+                            function applyToolbarPositions(){
+                                if(!searchBar) return;
+                                var actionsVisible = actionsBar && !actionsBar.classList.contains('d-none');
+                                searchBar.style.top = actionsVisible ? '102px' : '56px';
+                            }
+                            // Estado inicial
+                            if(actionsBar && loadState('toolbar.actions.hidden','0') === '1'){ actionsBar.classList.add('d-none'); }
+                            if(searchBar && loadState('toolbar.search.hidden','0') === '1'){ searchBar.classList.add('d-none'); }
+                            applyToolbarPositions();
+                            // Botones Navbar
+                            var btnShowActionsBar = document.getElementById('btnShowActionsBar');
+                            if(btnShowActionsBar){ btnShowActionsBar.addEventListener('click', function(){ if(!actionsBar) return; var hidden = actionsBar.classList.toggle('d-none'); saveState('toolbar.actions.hidden', hidden ? '1' : '0'); applyToolbarPositions(); }); }
+                            var btnShowSearchBar = document.getElementById('btnShowSearchBar');
+                            if(btnShowSearchBar){ btnShowSearchBar.addEventListener('click', function(){ if(!searchBar) return; var hidden = searchBar.classList.toggle('d-none'); saveState('toolbar.search.hidden', hidden ? '1' : '0'); applyToolbarPositions(); }); }
+                        }catch(ex){}
+                    }catch(e){}
+                });
+                // Overlay de carga para postbacks y submits + ajuste de toolbars sin desplazar contenido
+                try{
+                  function showLoading(){ var o=document.getElementById('loadingOverlay'); if(o){ o.classList.add('active'); } }
+                  function hideLoading(){ var o=document.getElementById('loadingOverlay'); if(o){ o.classList.remove('active'); } }
+                  function applyToolbarOffsets(){
+                      try{
+                          var root = document.documentElement;
+                          var actions = document.getElementById('toolbarActions');
+                          var search = document.getElementById('toolbarSearch');
+                          var actionsHidden = !actions || actions.classList.contains('d-none');
+                          var searchHidden = !search || search.classList.contains('d-none');
+                          var numBars = (actionsHidden?0:1) + (searchHidden?0:1);
+                          var hNav = parseInt(getComputedStyle(root).getPropertyValue('--navbar-h')) || 56;
+                          var hBar = parseInt(getComputedStyle(root).getPropertyValue('--toolbar-h')) || 48;
+                          var topSearch = hNav + (actionsHidden ? 0 : hBar);
+                          if(search){ search.style.top = topSearch + 'px'; }
+                          var padTop = hNav + (2*hBar); // siempre reservamos espacio para 2 barras para evitar saltos
+                          var cont = document.querySelector('.body-content');
+                          if(cont){ cont.style.paddingTop = padTop + 'px'; }
+                      }catch(e){}
+                  }
+                  if(window.Sys && Sys.WebForms){
+                    var prm = Sys.WebForms.PageRequestManager.getInstance();
+                    prm.add_initializeRequest(function(sender, args){
+                      try{
+                        var postBackElement = args.get_postBackElement();
+                        // Evitar doble postback (clicks repetidos) deshabilitando temporalmente el elemento
+                        if(postBackElement && !postBackElement._busy){ postBackElement._busy = true; postBackElement.setAttribute('disabled','disabled'); setTimeout(function(){ try{ postBackElement.removeAttribute('disabled'); postBackElement._busy=false; }catch(e){} }, 1500); }
+                      }catch(e){}
+                    });
+                    prm.add_beginRequest(function(){ showLoading(); });
+                    prm.add_endRequest(function(sender, args){
+                      try{
+                        if(args && args.get_error && args.get_error()){ 
+                          var err = args.get_error();
+                          try{ if(window.UiCommon){ UiCommon.showToast(err.message||'Ocurrió un error en la operación.','danger'); } }catch(e){}
+                          try{ args.set_errorHandled(true); }catch(e){}
+                        }
+                      }catch(e){}
+                      setTimeout(hideLoading,50);
+                      applyToolbarOffsets();
+                    });
+                  }
+                  var theForm = document.querySelector('form');
+                  if(theForm){ theForm.addEventListener('submit', function(){ showLoading(); }, true); }
+                  window.__loadingOverlay = { show: showLoading, hide: hideLoading };
+                  // Ajuste inicial
+                  document.addEventListener('DOMContentLoaded', applyToolbarOffsets);
+                }catch(e){}
+            })();
+        </script>
+    </form>
+</body>
+</html>

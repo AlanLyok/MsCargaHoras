@@ -1,0 +1,107 @@
+:root{
+  /* Tipografía */
+  --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+
+  /* Espaciado escala 8px */
+  --sp-1: .5rem;   /* 8px */
+  --sp-2: 1rem;    /* 16px */
+  --sp-3: 1.5rem;  /* 24px */
+  --sp-4: 2rem;    /* 32px */
+
+  /* Colores estado filas */
+  --row-new: #e8f7ec;
+  --row-mod: #e7f0ff;
+  --row-del-text: #777777;
+  --cell-error-bg: #fff6d6;
+
+  /* Color base (mapea a variables de Bootstrap) */
+  --body-bg: #ffffff;
+  --body-fg: #212529;
+  --border-color: #dee2e6;
+  --muted: #6c757d;
+
+  /* Bootstrap CSS variables */
+  --bs-body-bg: var(--body-bg);
+  --bs-body-color: var(--body-fg);
+  --bs-border-color: var(--border-color);
+  --bs-card-bg: #ffffff;
+  --bs-card-color: var(--body-fg);
+  --bs-card-border-color: var(--border-color);
+  --bs-link-color: #0d6efd;
+  --bs-nav-tabs-link-active-bg: #ffffff;
+  --bs-nav-tabs-link-active-color: var(--body-fg);
+  --bs-nav-tabs-link-active-border-color: var(--border-color) var(--border-color) transparent;
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: rgba(0,0,0,.03);
+  --bs-table-hover-bg: rgba(13,110,253,.06);
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --body-bg: #0f1115;
+    --body-fg: #e6e6e6;
+    --border-color: #2a2f3a;
+    --muted: #9aa4b2;
+
+    --bs-body-bg: var(--body-bg);
+    --bs-body-color: var(--body-fg);
+    --bs-border-color: var(--border-color);
+    --bs-card-bg: #121722;
+    --bs-card-color: var(--body-fg);
+    --bs-card-border-color: var(--border-color);
+    --bs-link-color: #66b0ff;
+    --bs-nav-tabs-link-active-bg: #1a2130;
+    --bs-nav-tabs-link-active-color: var(--body-fg);
+    --bs-nav-tabs-link-active-border-color: var(--border-color) var(--border-color) transparent;
+    --bs-table-bg: transparent;
+    --bs-table-striped-bg: rgba(255,255,255,.04);
+    --bs-table-hover-bg: rgba(102,176,255,.12);
+  }
+}
+
+/* Forzar tema oscuro/claro via atributo data-theme en :root */
+:root[data-theme='dark']{
+  --body-bg: #0f1115;
+  --body-fg: #e6e6e6;
+  --border-color: #2a2f3a;
+  --muted: #9aa4b2;
+
+  --bs-body-bg: var(--body-bg);
+  --bs-body-color: var(--body-fg);
+  --bs-border-color: var(--border-color);
+  --bs-card-bg: #121722;
+  --bs-card-color: var(--body-fg);
+  --bs-card-border-color: var(--border-color);
+  --bs-link-color: #66b0ff;
+  --bs-nav-tabs-link-active-bg: #1a2130;
+  --bs-nav-tabs-link-active-color: var(--body-fg);
+  --bs-nav-tabs-link-active-border-color: var(--border-color) var(--border-color) transparent;
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: rgba(255,255,255,.04);
+  --bs-table-hover-bg: rgba(102,176,255,.12);
+}
+:root[data-theme='light']{
+  --body-bg: #ffffff;
+  --body-fg: #212529;
+  --border-color: #dee2e6;
+  --muted: #6c757d;
+
+  --bs-body-bg: var(--body-bg);
+  --bs-body-color: var(--body-fg);
+  --bs-border-color: var(--border-color);
+  --bs-card-bg: #ffffff;
+  --bs-card-color: var(--body-fg);
+  --bs-card-border-color: var(--border-color);
+  --bs-link-color: #0d6efd;
+  --bs-nav-tabs-link-active-bg: #ffffff;
+  --bs-nav-tabs-link-active-color: var(--body-fg);
+  --bs-nav-tabs-link-active-border-color: var(--border-color) var(--border-color) transparent;
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: rgba(0,0,0,.03);
+  --bs-table-hover-bg: rgba(13,110,253,.06);
+}
+
+html, body{
+  font-family: var(--font-sans);
+}
+

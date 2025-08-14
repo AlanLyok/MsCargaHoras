@@ -10,12 +10,16 @@
             <div class="container-fluid px-3 px-md-4 px-lg-5 py-2">
                 <div class="controls d-flex flex-nowrap align-items-center gap-2 overflow-auto">
                     <asp:TextBox ID="txtConsulta" runat="server" CssClass="form-control flex-grow-1" placeholder="Ticket o Actividad" style="min-width:200px;" />
-                    <button type="button" class="btn btn-primary btn-sm d-inline-flex align-items-center gap-1" onclick="try{ UiCommon.showLoading(); }catch(e){} return abrirVistaPreviaTicket();"><i class="bi bi-eye-fill"></i><span class="d-none d-sm-inline">Ver ticket</span></button>
-                    <button type="button" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1" onclick="try{ UiCommon.showLoading(); }catch(e){} return abrirConsultaTicket();"><i class="bi bi-search"></i><span class="d-none d-sm-inline">Horas ticket</span></button>
-                    <button type="button" class="btn btn-success btn-sm d-inline-flex align-items-center gap-1" onclick="try{ UiCommon.showLoading(); }catch(e){} return abrirNuevoTicket();"><i class="bi bi-plus-circle"></i><span class="d-none d-sm-inline">Nuevo Ticket</span></button>
-                    <button type="button" class="btn btn-outline-info btn-sm d-inline-flex align-items-center gap-1" onclick="try{ UiCommon.showLoading(); }catch(e){} return abrirConsultaActividad();"><i class="bi bi-clipboard-check"></i><span class="d-none d-sm-inline">Consultar actividad</span></button>
-                    <button type="button" class="btn btn-warning btn-sm d-inline-flex align-items-center gap-1" onclick="try{ UiCommon.showLoading(); }catch(e){} return abrirTimelineTickets();"><i class="bi bi-list-task"></i><span class="d-none d-sm-inline">Últimos Cambios</span></button>
-                    <button type="button" class="btn btn-dark btn-sm d-inline-flex align-items-center gap-1" onclick="try{ UiCommon.showLoading(); }catch(e){} return abrirTimelineTrac();"><i class="bi bi-git"></i><span class="d-none d-sm-inline">Commits SVN</span></button>
+                    <button type="button" class="btn btn-primary btn-sm d-inline-flex align-items-center gap-1" onclick="return abrirVistaPreviaTicket();"><i class="bi bi-eye-fill"></i><span class="d-none d-sm-inline">Ver Ticket</span></button>
+                    <button type="button" class="btn btn-soft-primary btn-soft btn-sm d-inline-flex align-items-center gap-1" onclick="return abrirConsultaTicket();"><i class="bi bi-search"></i><span class="d-none d-sm-inline">Horas Ticket</span></button>
+                    <button type="button" class="btn btn-soft-success btn-soft btn-sm d-inline-flex align-items-center gap-1" onclick="return abrirNuevoTicket();"><i class="bi bi-plus-circle"></i><span class="d-none d-sm-inline">Nuevo Ticket</span></button>
+                    <button type="button" class="btn btn-soft-info btn-soft btn-sm d-inline-flex align-items-center gap-1" onclick="return abrirConsultaActividad();"><i class="bi bi-clipboard-check"></i><span class="d-none d-sm-inline">Ver Actividad</span></button>
+                    <button type="button" class="btn btn-soft-warning btn-soft btn-sm d-inline-flex align-items-center gap-1" onclick="return abrirTimelineTickets();"><i class="bi bi-list-task"></i><span class="d-none d-sm-inline">Historial TRAC</span></button>
+                    <button type="button" class="btn btn-soft-secondary btn-soft btn-sm d-inline-flex align-items-center gap-1" onclick="return abrirTimelineTrac();"><i class="bi bi-git"></i><span class="d-none d-sm-inline">Commits SVN</span></button>
+                    <div class="d-inline-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-soft-dark btn-soft btn-sm d-inline-flex align-items-center gap-1" onclick="return abrirTareasNet();"><i class="bi bi-windows"></i><span class="d-none d-sm-inline">TareasNet</span></button>
+                    </div>
+                    
                             </div>
                         </div>
                     </div>
@@ -52,14 +56,14 @@
             <div class="tab-pane fade show active" id="tab-faltantes" role="tabpanel" aria-labelledby="faltantes-tab" tabindex="0">
                 <div class="row g-4 mt-1">
                     <div class="col-lg-4">
-                        <fieldset class="card shadow-sm">
-                            <legend class="card-header h5 mb-0 d-flex justify-content-between align-items-center">
+                        <div class="card shadow-sm">
+                            <div class="card-header h5 mb-0 d-flex justify-content-between align-items-center">
                                 <span>Horas Faltantes</span>
                                 <span class="d-flex align-items-center gap-2">
-                                    <asp:Label ID="lblDiasFaltantes" runat="server" CssClass="badge bg-secondary-subtle text-dark" />
-                                    <asp:Label ID="lblHorasFaltantes" runat="server" CssClass="badge bg-secondary-subtle text-dark" />
+                                    <asp:Label ID="lblDiasFaltantes" runat="server" CssClass="badge bg-secondary-subtle text-secondary-emphasis" />
+                                    <asp:Label ID="lblHorasFaltantes" runat="server" CssClass="badge bg-secondary-subtle text-secondary-emphasis" />
                                 </span>
-                            </legend>
+                            </div>
                             <div class="card-body">
                                 
                                 <div class="table-responsive grid-scroll">
@@ -75,7 +79,7 @@
                         </div>
                                 <asp:Label ID="total" runat="server" CssClass="text-muted d-none"></asp:Label>
                             </div>
-                        </fieldset>
+                        </div>
                         <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:LABTRACConnectionString %>" SelectCommand="AGLTRAC_BuscarHsPendientesDeCarga" SelectCommandType="StoredProcedure" CancelSelectOnNullParameter="true" EnableCaching="true" CacheDuration="60" CacheExpirationPolicy="Absolute" OnSelected="SqlDataSource_Selected" OnSelecting="SqlDataSource_Selecting">
                             <SelectParameters>
                                 <asp:ControlParameter ControlID="txtLegajo" Name="Filtro" PropertyName="Text" Type="String" ConvertEmptyStringToNull="true" />
@@ -83,17 +87,17 @@
                         </asp:SqlDataSource>
                     </div>
                     <div class="col-lg-8">
-                        <fieldset class="card shadow-sm">
-                            <legend class="card-header h5 mb-0">Horas Sugeridas</legend>
+                        <div class="card shadow-sm">
+                            <div class="card-header h5 mb-0">Horas Sugeridas</div>
                             <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <div class="d-flex flex-wrap align-items-center gap-2">
                                 
-                                <span class="badge bg-dark-subtle text-dark">Día</span>
-                                <span class="badge bg-primary-subtle text-dark"><asp:Label ID="lblDiaSeleccionado" runat="server" Text="-" /></span>
-                                <span class="badge bg-primary-subtle text-dark"><asp:Label ID="lblFechaSeleccionada" runat="server" Text="--/--/----" /></span>
+                                <span class="badge bg-dark-subtle text-dark-emphasis">Día</span>
+                                <span class="badge bg-primary-subtle text-primary-emphasis"><asp:Label ID="lblDiaSeleccionado" runat="server" Text="-" /></span>
+                                <span class="badge bg-primary-subtle text-primary-emphasis"><asp:Label ID="lblFechaSeleccionada" runat="server" Text="--/--/----" /></span>
                             </div>
-                            <div class="badge bg-secondary-subtle text-dark">Falta <strong><asp:Label ID="lblFaltaSeleccionada" runat="server" Text="0" /></strong> hs</div>
+                            <div class="badge bg-secondary-subtle text-secondary-emphasis">Falta <strong><asp:Label ID="lblFaltaSeleccionada" runat="server" Text="0" /></strong> hs</div>
                         </div>
                         <div class="table-responsive grid-scroll">
                              <asp:GridView ID="grdSugeridas" runat="server" CssClass="table table-striped table-hover align-middle"
@@ -112,7 +116,7 @@
                             </asp:GridView>
                         </div>
                             </div>
-                        </fieldset>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -128,8 +132,8 @@
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.bootstrap5.min.css" />
                 <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
 
-                <fieldset class="card shadow-sm mb-3">
-                    <legend class="card-header h5 mb-0">Parámetros</legend>
+                <div class="card shadow-sm mb-3">
+                    <div class="card-header h5 mb-0">Parámetros</div>
                     <div class="card-body">
                         <div class="row g-3 align-items-end">
                             <div class="col-sm-3">
@@ -142,13 +146,13 @@
                             <div class="col-sm"></div>
                         </div>
                     </div>
-                </fieldset>
+                </div>
 
-                <fieldset class="card shadow-sm mb-3">
-                    <legend class="card-header h5 mb-0 d-flex justify-content-between align-items-center">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-header h5 mb-0 d-flex justify-content-between align-items-center">
                         <span>Grilla editable</span>
                         <span class="text-muted small" id="lblSugeridasResumen"></span>
-                    </legend>
+                    </div>
                     <div class="card-body">
                     <div id="gridHorasReales" class="table-sticky"></div>
                         <div class="table-responsive grid-scroll mt-3">
@@ -176,12 +180,12 @@
                     <asp:HiddenField ID="hidTracAuthor" runat="server" />
                 </div>
                     </div>
-                </fieldset>
+                </div>
 
 
 
-                <fieldset class="card shadow-sm">
-                    <legend class="card-header h5 mb-0">Acciones</legend>
+                <div class="card shadow-sm">
+                    <div class="card-header h5 mb-0">Acciones</div>
                     <div class="card-body">
                         <div class="row g-2 align-items-center">
                             <div class="col-auto">
@@ -203,7 +207,7 @@
                             </div>
                         </div>
                     </div>
-                </fieldset>
+                </div>
                 <!-- Cargas opcionales sin atributo integrity para evitar bloqueos por hash mismatcheado -->
                 <script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js" crossorigin="anonymous"></script>
                 <script src="https://cdn.jsdelivr.net/npm/flatpickr" crossorigin="anonymous"></script>
@@ -250,6 +254,38 @@
                     })();
                 </script>
                 <script type="text/javascript">
+                    function abrirTareasNet(){
+                        var protoUrl = 'tareas://abrir';
+
+                        var launched = false;
+                        var markLaunched = function(){ launched = true; try{ localStorage.setItem('tareas:protocol:ok','1'); }catch(_){} };
+                        try{ window.addEventListener('blur', markLaunched, { once:true }); }catch(_){}
+                        try{ document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='hidden'){ markLaunched(); } }, { once:true }); }catch(_){}
+
+                        var inicio = Date.now();
+                        try{
+                            // Evitar error en consola utilizando un iframe oculto en vez de location.href
+                            // Para minimizar parpadeos de consola: intentamos window.location asignando a about:blank + setTimeout sobre el iframe
+                            var iframe = document.getElementById('tareasLauncherFrame');
+                            if(!iframe){ iframe = document.createElement('iframe'); iframe.id = 'tareasLauncherFrame'; iframe.style.display='none'; document.body.appendChild(iframe); }
+                            // Navegador maneja el protocolo; el iframe evita el error en consola
+                            iframe.src = protoUrl;
+                        }catch(e){}
+
+                        setTimeout(function(){
+                            // Solo abrir ayuda si inferimos fallo (no perdió foco ni cambió visibilidad)
+                            if(!launched && (Date.now() - inicio < 1400)){
+                                try{
+                                    // Abrir modal con ayuda embebida (sin cambiar de pestaña)
+                                    abrirAyudaModal();
+                                }catch(_){ try{ window.open('<%: ResolveUrl("~/AyudaTareasNet.aspx") %>?embed=1', '_blank'); }catch(__){} }
+                                try{ UiCommon.showToast('No se pudo abrir TareasNet. Se abrió la ayuda para instalar el protocolo.','warning'); }catch(ex){ }
+                            }
+                        }, 1200);
+                        return false;
+                    }
+                </script>
+                <script type="text/javascript">
                     function obtenerNumeroConsulta(){
                         var tb = document.getElementById('<%= txtConsulta.ClientID %>');
                         if(!tb) return '';
@@ -287,14 +323,14 @@
                     function abrirConsultaTicket(){
                         var n = obtenerNumeroConsulta();
                         var url = 'https://desarrollo.mastersoft.com.ar/WebConsultaHsAplicadas/?nrotk=' + n;
-                        window.open(url, '_blank');
+                        try{ openExternal(url); }catch(_){}
                         return false;
                     }
                     function abrirConsultaActividad(){
                         var n = obtenerNumeroConsulta();
                         var base = 'https://desarrollo.mastersoft.com.ar/DatosActividad/?ActividadID=';
                         var url = n ? (base + n) : base;
-                        window.open(url, '_blank');
+                        try{ openExternal(url); }catch(_){}
                         return false;
                     }
                 </script>
@@ -338,7 +374,7 @@
                         return false;
                     }
                     function abrirNuevoTicket(){
-                        window.open('https://ticket.mastersoft.com.ar/trac/incidentes/newticket', '_blank');
+                        try{ openExternal('https://ticket.mastersoft.com.ar/trac/incidentes/newticket'); }catch(_){}
                         return false;
                     }
                     function abrirVistaPreviaTicket(){
@@ -350,10 +386,7 @@
                         if(!n){ n = obtenerNumeroConsulta(); }
                         if(!n){ alert('Ingrese un número de ticket o seleccione uno.'); return false; }
                         var url = 'https://ticket.mastersoft.com.ar/trac/incidentes/ticket/' + n;
-                        var w = Math.min(1100, window.innerWidth - 80), h = Math.min(700, window.innerHeight - 80);
-                        var y = Math.max(0, Math.round((window.innerHeight - h)/2));
-                        var x = Math.max(0, Math.round((window.innerWidth - w)/2));
-                        window.open(url, 'vista_previa_ticket', 'width=' + w + ',height=' + h + ',left=' + x + ',top=' + y + ',resizable=yes,scrollbars=yes');
+                        try{ openExternal(url); }catch(_){}
                         return false;
                     }
                     function abrirTimelineTrac(){
@@ -376,7 +409,7 @@
                             + '&authors=' + encodeURIComponent(author)
                             + '&changeset=on'
                             + '&update=Actualizar';
-                        window.open(url, '_blank');
+                        try{ openExternal(url); }catch(_){}
                         return false;
                     }
                     function abrirTimelineTickets(){
@@ -400,7 +433,7 @@
                             + '&ticket=on'
                             + '&ticket_details=on'
                             + '&update=Actualizar';
-                        window.open(url, '_blank');
+                        try{ openExternal(url); }catch(_){}
                         return false;
                     }
                 </script>
@@ -408,8 +441,8 @@
             <div class="tab-pane fade" id="tab-trac" role="tabpanel" aria-labelledby="trac-tab" tabindex="0">
                 <div class="row g-3 mt-3">
                     <div class="col-12">
-                        <fieldset class="card shadow-sm">
-                            <legend class="card-header h5 mb-0">Tareas</legend>
+                        <div class="card shadow-sm">
+                            <div class="card-header h5 mb-0">Tareas</div>
                             <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
                             <div class="d-flex align-items-center gap-3">
@@ -446,7 +479,7 @@
                         <asp:HiddenField ID="hidTracSelTicketId" runat="server" />
                         <asp:HiddenField ID="hidLegajoNum" runat="server" />
                             </div>
-                        </fieldset>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -532,6 +565,35 @@
                     // restaurar estilos que bootstrap ajusta
                     document.body.style.removeProperty('padding-right');
                     document.body.style.removeProperty('overflow');
+                }catch(e){}
+            }
+        </script>
+        <script type="text/javascript">
+            // Modal de ayuda con iframe (modo embebido)
+            function abrirAyudaModal(){
+                try{
+                    var id='ayudaModal';
+                    var el=document.getElementById(id);
+                    if(!el){
+                        var div=document.createElement('div');
+                        div.innerHTML='\
+<div class="modal fade" id="ayudaModal" tabindex="-1" aria-hidden="true">\
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-fullscreen-sm-down">\
+    <div class="modal-content">\
+      <div class="modal-header">\
+        <h5 class="modal-title">Ayuda TareasNet</h5>\
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>\
+      </div>\
+      <div class="modal-body p-0" style="min-height:60vh">\
+        <iframe src="<%: ResolveUrl("~/AyudaTareasNet.aspx") %>?embed=1" style="border:0;width:100%;height:65vh" title="Ayuda"></iframe>\
+      </div>\
+    </div>\
+  </div>\
+</div>';
+                        document.body.appendChild(div.firstChild);
+                        el=document.getElementById(id);
+                    }
+                    if(window.bootstrap && el){ var m=new bootstrap.Modal(el,{backdrop:'static'}); m.show(); }
                 }catch(e){}
             }
         </script>

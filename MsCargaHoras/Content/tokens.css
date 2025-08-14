@@ -14,26 +14,136 @@
   --row-del-text: #777777;
   --cell-error-bg: #fff6d6;
 
+  /* Paleta marca (rojos) */
+  --brand-300: #e24a4a;
+  --brand-400: #d22a2a;
+  --brand-500: #c00000; /* principal */
+  --brand-600: #a00000;
+  --brand-700: #800000;
+
+  /* Neutrales (light) */
+  --neutral-0: #ffffff;
+  --neutral-50: #f6f7f9;
+  --neutral-100: #eef0f2;
+  --neutral-200: #e6e8eb;
+  --neutral-300: #dee2e6; /* borde */
+  --neutral-700: #495057;
+  --neutral-800: #343a40;
+  --neutral-900: #212529;
+
   /* Color base (mapea a variables de Bootstrap) */
-  --body-bg: #ffffff;
-  --body-fg: #212529;
-  --border-color: #dee2e6;
+  --body-bg: var(--neutral-0);
+  --body-fg: var(--neutral-900);
+  --border-color: var(--neutral-300);
   --muted: #6c757d;
 
   /* Bootstrap CSS variables */
   --bs-body-bg: var(--body-bg);
   --bs-body-color: var(--body-fg);
   --bs-border-color: var(--border-color);
-  --bs-card-bg: #ffffff;
+  /* Tertiary background para bg-body-tertiary */
+  --bs-tertiary-bg: var(--surface-2);
+  --bs-card-bg: var(--surface-1);
   --bs-card-color: var(--body-fg);
   --bs-card-border-color: var(--border-color);
-  --bs-link-color: #0d6efd;
-  --bs-nav-tabs-link-active-bg: #ffffff;
+  --bs-card-cap-bg: var(--surface-2);
+  --bs-card-cap-color: var(--body-fg);
+  /* Degradé de fondo (light) - más marcado */
+  --body-grad-start: #e9ecef; /* gris claro visible */
+  --body-grad-end: #ffffff;   /* blanco */
+
+  /* Marca aplicada al sistema */
+  --bs-primary: var(--brand-600);
+  --bs-primary-rgb: 160,0,0;
+  --bs-link-color: var(--brand-600);
+  --bs-link-hover-color: var(--brand-700);
+  --bs-link-color-rgb: 160,0,0;
+  --bs-danger: var(--brand-700);
+  --bs-danger-rgb: 128,0,0;
+
+  /* Variantes complementarias (para btn-dark/btn-light y utilidades) */
+  --bs-dark: #343a40;
+  --bs-dark-rgb: 52,58,64;
+  --bs-light: #f8f9fa;
+  --bs-light-rgb: 248,249,250;
+
+  /* Subtle backgrounds y text emphasis (coherentes con Bootstrap 5.3) */
+  --bs-primary-bg-subtle: color-mix(in srgb, var(--bs-primary) 12%, transparent);
+  --bs-primary-text-emphasis: color-mix(in srgb, var(--bs-primary) 40%, black);
+  --bs-secondary-bg-subtle: color-mix(in srgb, var(--bs-secondary) 12%, transparent);
+  --bs-secondary-text-emphasis: color-mix(in srgb, var(--bs-secondary) 40%, black);
+  --bs-success-bg-subtle: color-mix(in srgb, var(--bs-success) 12%, transparent);
+  --bs-success-text-emphasis: color-mix(in srgb, var(--bs-success) 40%, black);
+  --bs-info-bg-subtle: color-mix(in srgb, var(--bs-info) 12%, transparent);
+  --bs-info-text-emphasis: color-mix(in srgb, var(--bs-info) 45%, black);
+  --bs-warning-bg-subtle: color-mix(in srgb, var(--bs-warning) 20%, white);
+  --bs-warning-text-emphasis: color-mix(in srgb, var(--bs-warning) 50%, black);
+  --bs-danger-bg-subtle: color-mix(in srgb, var(--bs-danger) 12%, transparent);
+  --bs-danger-text-emphasis: color-mix(in srgb, var(--bs-danger) 40%, black);
+  --bs-dark-bg-subtle: color-mix(in srgb, var(--neutral-900) 7%, white);
+  --bs-dark-text-emphasis: color-mix(in srgb, var(--neutral-900) 72%, black);
+
+  /* Navbar y overlay */
+  --navbar-bg: #131722; /* navbar básica (modo light mantiene contraste alto) */
+  --overlay-backdrop: rgba(0,0,0,.25);
+
+  /* Otras variantes (light) */
+  --bs-success: #198754;
+  --bs-success-rgb: 25,135,84;
+  --bs-info: #0dcaf0;
+  --bs-info-rgb: 13,202,240;
+  --bs-warning: #ffc107;
+  --bs-warning-rgb: 255,193,7;
+  --bs-secondary: #6c757d;
+  --bs-secondary-rgb: 108,117,125;
+
+  --bs-nav-tabs-link-active-bg: var(--neutral-0);
   --bs-nav-tabs-link-active-color: var(--body-fg);
   --bs-nav-tabs-link-active-border-color: var(--border-color) var(--border-color) transparent;
-  --bs-table-bg: transparent;
-  --bs-table-striped-bg: rgba(0,0,0,.03);
-  --bs-table-hover-bg: rgba(13,110,253,.06);
+  --bs-table-bg: var(--surface-1);
+  --bs-table-striped-bg: rgba(0,0,0,.03); /* light */
+  --bs-table-hover-bg: rgba(0,0,0,.04);
+  /* Acento por fila (Bootstrap usa --bs-table-accent-bg) */
+  --bs-table-accent-bg: var(--bs-table-bg);
+
+  /* Superficies y componentes (light) */
+  --surface-1: var(--neutral-0);
+  --surface-2: var(--neutral-50);
+  --focus-ring-color: color-mix(in srgb, var(--bs-primary) 55%, white);
+
+  /* Gradientes de card (light): dos estilos visuales */
+  --card1-grad-start: var(--neutral-0);
+  --card1-grad-end: var(--neutral-50);
+  --card2-grad-start: color-mix(in srgb, var(--bs-primary) 8%, var(--neutral-0));
+  --card2-grad-end: var(--neutral-0);
+
+  /* Degradé de tabla (bottom→top en light) */
+  --table-grad-start: #ffffff; /* abajo */
+  --table-grad-end: #f3f4f6;   /* arriba */
+
+  /* Formularios */
+  --form-bg: var(--neutral-0);
+  --form-color: var(--body-fg);
+  --form-border: var(--border-color);
+  --form-placeholder: var(--muted);
+
+  /* Dropdown/Popovers/Tooltips/Modals/Toasts */
+  --dropdown-bg: var(--surface-1);
+  --dropdown-color: var(--body-fg);
+  --dropdown-border: var(--border-color);
+  --popover-bg: var(--surface-1);
+  --popover-color: var(--body-fg);
+  --popover-border: var(--border-color);
+  --tooltip-bg: rgba(0,0,0,.85);
+  --tooltip-color: #fff;
+  --modal-bg: var(--surface-1);
+  --modal-color: var(--body-fg);
+  --modal-border: var(--border-color);
+  --toast-bg: var(--surface-1);
+  --toast-color: var(--body-fg);
+  --toast-border: var(--border-color);
+  --toast-header-bg: var(--surface-2);
+  --toast-header-color: var(--body-fg);
 }
 
 @media (prefers-color-scheme: dark){
@@ -49,13 +159,104 @@
     --bs-card-bg: #121722;
     --bs-card-color: var(--body-fg);
     --bs-card-border-color: var(--border-color);
-    --bs-link-color: #66b0ff;
+    --bs-card-cap-bg: var(--surface-2);
+    --bs-card-cap-color: var(--body-fg);
+
+    --bs-primary: var(--brand-400);
+    --bs-primary-rgb: 210,42,42;
+    --bs-link-color: var(--brand-400);
+    --bs-link-hover-color: var(--brand-300);
+    --bs-link-color-rgb: 210,42,42;
+
     --bs-nav-tabs-link-active-bg: #1a2130;
     --bs-nav-tabs-link-active-color: var(--body-fg);
     --bs-nav-tabs-link-active-border-color: var(--border-color) var(--border-color) transparent;
-    --bs-table-bg: transparent;
-    --bs-table-striped-bg: rgba(255,255,255,.04);
-    --bs-table-hover-bg: rgba(102,176,255,.12);
+    --bs-table-bg: var(--surface-1);
+    --bs-table-striped-bg: rgba(255,255,255,.04); /* dark */
+    --bs-table-hover-bg: color-mix(in srgb, var(--bs-primary) 10%, transparent);
+    --bs-table-accent-bg: var(--bs-table-bg);
+
+    /* Superficies y componentes (dark) */
+    --surface-1: #121722;
+    --surface-2: #1a2130;
+    --focus-ring-color: color-mix(in srgb, var(--bs-primary) 70%, black);
+
+    /* Gradientes de card (dark): dos estilos visuales */
+    --card1-grad-start: #121722;
+    --card1-grad-end: #1a2130;
+    --card2-grad-start: color-mix(in srgb, var(--bs-primary) 14%, #121722);
+    --card2-grad-end: #121722;
+    /* Variantes (dark) */
+    --bs-success: #23a36b;
+    --bs-success-rgb: 35,163,107;
+    --bs-info: #39d8f3;
+    --bs-info-rgb: 57,216,243;
+    --bs-warning: #ffcd39;
+    --bs-warning-rgb: 255,205,57;
+    --bs-secondary: #9aa4b2;
+    --bs-secondary-rgb: 154,164,178;
+    --bs-danger: var(--brand-400);
+    --bs-danger-rgb: 210,42,42;
+
+    /* Variantes complementarias */
+    --bs-dark: #1a2130;
+    --bs-dark-rgb: 26,33,48;
+    --bs-light: #e6e6e6;
+    --bs-light-rgb: 230,230,230;
+
+    /* Tertiary background */
+    --bs-tertiary-bg: var(--surface-2);
+
+    /* Degradé de tabla (bottom→top en dark) */
+    --table-grad-start: #0f1115; /* abajo (más oscuro) */
+    --table-grad-end: #1a2130;   /* arriba */
+    /* Degradé de fondo (dark) */
+    --body-grad-start: #0a0c10;
+    --body-grad-end: #161a20;
+
+    /* Formularios */
+    --form-bg: #0f141f;
+    --form-color: var(--body-fg);
+    --form-border: #2a2f3a;
+    --form-placeholder: #9aa4b2;
+
+    /* Dropdown/Popovers/Tooltips/Modals/Toasts */
+    --dropdown-bg: var(--surface-1);
+    --dropdown-color: var(--body-fg);
+    --dropdown-border: var(--border-color);
+    --popover-bg: var(--surface-1);
+    --popover-color: var(--body-fg);
+    --popover-border: var(--border-color);
+    --tooltip-bg: rgba(0,0,0,.85);
+    --tooltip-color: #fff;
+    --modal-bg: var(--surface-1);
+    --modal-color: var(--body-fg);
+    --modal-border: var(--border-color);
+    --toast-bg: var(--surface-1);
+    --toast-color: var(--body-fg);
+    --toast-border: var(--border-color);
+    --toast-header-bg: var(--surface-2);
+    --toast-header-color: var(--body-fg);
+
+    /* Subtle backgrounds y text emphasis en dark */
+    --bs-primary-bg-subtle: color-mix(in srgb, var(--bs-primary) 24%, black);
+    --bs-primary-text-emphasis: color-mix(in srgb, var(--bs-primary) 60%, white);
+    --bs-secondary-bg-subtle: color-mix(in srgb, var(--bs-secondary) 18%, black);
+    --bs-secondary-text-emphasis: color-mix(in srgb, var(--bs-secondary) 62%, white);
+    --bs-success-bg-subtle: color-mix(in srgb, var(--bs-success) 20%, black);
+    --bs-success-text-emphasis: color-mix(in srgb, var(--bs-success) 62%, white);
+    --bs-info-bg-subtle: color-mix(in srgb, var(--bs-info) 20%, black);
+    --bs-info-text-emphasis: color-mix(in srgb, var(--bs-info) 64%, white);
+    --bs-warning-bg-subtle: color-mix(in srgb, var(--bs-warning) 22%, black);
+    --bs-warning-text-emphasis: color-mix(in srgb, var(--bs-warning) 70%, white);
+    --bs-danger-bg-subtle: color-mix(in srgb, var(--bs-danger) 20%, black);
+    --bs-danger-text-emphasis: color-mix(in srgb, var(--bs-danger) 64%, white);
+    --bs-dark-bg-subtle: color-mix(in srgb, var(--surface-2) 40%, black);
+    --bs-dark-text-emphasis: color-mix(in srgb, var(--surface-2) 80%, white);
+
+    /* Navbar y overlay */
+    --navbar-bg: #121722;
+    --overlay-backdrop: rgba(0,0,0,.45);
   }
 }
 
@@ -72,33 +273,182 @@
   --bs-card-bg: #121722;
   --bs-card-color: var(--body-fg);
   --bs-card-border-color: var(--border-color);
-  --bs-link-color: #66b0ff;
+
+  --bs-primary: var(--brand-400);
+  --bs-primary-rgb: 210,42,42;
+  --bs-link-color: var(--brand-400);
+  --bs-link-hover-color: var(--brand-300);
+  --bs-link-color-rgb: 210,42,42;
+
   --bs-nav-tabs-link-active-bg: #1a2130;
   --bs-nav-tabs-link-active-color: var(--body-fg);
   --bs-nav-tabs-link-active-border-color: var(--border-color) var(--border-color) transparent;
-  --bs-table-bg: transparent;
+  --bs-table-bg: var(--neutral-0);
+  --bs-table-accent-bg: var(--bs-table-bg);
   --bs-table-striped-bg: rgba(255,255,255,.04);
-  --bs-table-hover-bg: rgba(102,176,255,.12);
+  --bs-table-hover-bg: color-mix(in srgb, var(--bs-primary) 16%, transparent);
+
+  /* Superficies y componentes (dark) */
+  --surface-1: #121722;
+  --surface-2: #1a2130;
+  --focus-ring-color: color-mix(in srgb, var(--bs-primary) 70%, black);
+
+  /* Gradientes de card (dark): dos estilos visuales */
+  --card1-grad-start: #121722;
+  --card1-grad-end: #1a2130;
+  --card2-grad-start: color-mix(in srgb, var(--bs-primary) 14%, #121722);
+  --card2-grad-end: #121722;
+
+  /* Degradé de fondo (dark) */
+  --body-grad-start: #050607; /* negro */
+  --body-grad-end: #20242b;   /* gris oscuro más notorio */
+
+  /* Formularios */
+  --form-bg: #0f141f;
+  --form-color: var(--body-fg);
+  --form-border: #2a2f3a;
+  --form-placeholder: #9aa4b2;
+
+  /* Dropdown/Popovers/Tooltips/Modals/Toasts */
+  --dropdown-bg: var(--surface-1);
+  --dropdown-color: var(--body-fg);
+  --dropdown-border: var(--border-color);
+  --popover-bg: var(--surface-1);
+  --popover-color: var(--body-fg);
+  --popover-border: var(--border-color);
+  --tooltip-bg: rgba(0,0,0,.85);
+  --tooltip-color: #fff;
+  --modal-bg: var(--surface-1);
+  --modal-color: var(--body-fg);
+  --modal-border: var(--border-color);
+  --toast-bg: var(--surface-1);
+  --toast-color: var(--body-fg);
+  --toast-border: var(--border-color);
+  --toast-header-bg: var(--surface-2);
+  --toast-header-color: var(--body-fg);
+
+  /* Variantes complementarias */
+  --bs-dark: #1a2130;
+  --bs-dark-rgb: 26,33,48;
+  --bs-light: #e6e6e6;
+  --bs-light-rgb: 230,230,230;
+
+  /* Tertiary background */
+  --bs-tertiary-bg: var(--surface-2);
+
+  /* Subtle backgrounds y emphasis */
+  --bs-primary-bg-subtle: color-mix(in srgb, var(--bs-primary) 24%, black);
+  --bs-primary-text-emphasis: color-mix(in srgb, var(--bs-primary) 60%, white);
+  --bs-secondary-bg-subtle: color-mix(in srgb, var(--bs-secondary) 18%, black);
+  --bs-secondary-text-emphasis: color-mix(in srgb, var(--bs-secondary) 62%, white);
+  --bs-success-bg-subtle: color-mix(in srgb, var(--bs-success) 20%, black);
+  --bs-success-text-emphasis: color-mix(in srgb, var(--bs-success) 62%, white);
+  --bs-info-bg-subtle: color-mix(in srgb, var(--bs-info) 20%, black);
+  --bs-info-text-emphasis: color-mix(in srgb, var(--bs-info) 64%, white);
+  --bs-warning-bg-subtle: color-mix(in srgb, var(--bs-warning) 22%, black);
+  --bs-warning-text-emphasis: color-mix(in srgb, var(--bs-warning) 70%, white);
+  --bs-danger-bg-subtle: color-mix(in srgb, var(--bs-danger) 20%, black);
+  --bs-danger-text-emphasis: color-mix(in srgb, var(--bs-danger) 64%, white);
+  --bs-dark-bg-subtle: color-mix(in srgb, var(--surface-2) 40%, black);
+  --bs-dark-text-emphasis: color-mix(in srgb, var(--surface-2) 80%, white);
+
+  /* Navbar y overlay */
+  --navbar-bg: #121722;
+  --overlay-backdrop: rgba(0,0,0,.45);
 }
 :root[data-theme='light']{
-  --body-bg: #ffffff;
-  --body-fg: #212529;
-  --border-color: #dee2e6;
+  --body-bg: var(--neutral-0);
+  --body-fg: var(--neutral-900);
+  --border-color: var(--neutral-300);
   --muted: #6c757d;
 
   --bs-body-bg: var(--body-bg);
   --bs-body-color: var(--body-fg);
   --bs-border-color: var(--border-color);
-  --bs-card-bg: #ffffff;
+  --bs-card-bg: var(--neutral-0);
   --bs-card-color: var(--body-fg);
   --bs-card-border-color: var(--border-color);
-  --bs-link-color: #0d6efd;
-  --bs-nav-tabs-link-active-bg: #ffffff;
+
+  --bs-primary: var(--brand-600);
+  --bs-primary-rgb: 160,0,0;
+  --bs-link-color: var(--brand-600);
+  --bs-link-hover-color: var(--brand-700);
+  --bs-link-color-rgb: 160,0,0;
+
+  --bs-nav-tabs-link-active-bg: var(--neutral-0);
   --bs-nav-tabs-link-active-color: var(--body-fg);
   --bs-nav-tabs-link-active-border-color: var(--border-color) var(--border-color) transparent;
   --bs-table-bg: transparent;
   --bs-table-striped-bg: rgba(0,0,0,.03);
-  --bs-table-hover-bg: rgba(13,110,253,.06);
+  --bs-table-hover-bg: color-mix(in srgb, var(--bs-primary) 10%, transparent);
+
+  /* Superficies y componentes (light) */
+  --surface-1: var(--neutral-0);
+  --surface-2: var(--neutral-50);
+  --focus-ring-color: color-mix(in srgb, var(--bs-primary) 55%, white);
+
+  /* Gradientes de card (light): dos estilos visuales */
+  --card1-grad-start: var(--neutral-0);
+  --card1-grad-end: var(--neutral-50);
+  --card2-grad-start: color-mix(in srgb, var(--bs-primary) 8%, var(--neutral-0));
+  --card2-grad-end: var(--neutral-0);
+
+  /* Degradé de fondo (light) */
+  --body-grad-start: var(--neutral-50);
+  --body-grad-end: var(--neutral-0);
+
+  /* Formularios */
+  --form-bg: var(--neutral-0);
+  --form-color: var(--body-fg);
+  --form-border: var(--border-color);
+  --form-placeholder: var(--muted);
+
+  /* Dropdown/Popovers/Tooltips/Modals/Toasts */
+  --dropdown-bg: var(--surface-1);
+  --dropdown-color: var(--body-fg);
+  --dropdown-border: var(--border-color);
+  --popover-bg: var(--surface-1);
+  --popover-color: var(--body-fg);
+  --popover-border: var(--border-color);
+  --tooltip-bg: rgba(0,0,0,.85);
+  --tooltip-color: #fff;
+  --modal-bg: var(--surface-1);
+  --modal-color: var(--body-fg);
+  --modal-border: var(--border-color);
+  --toast-bg: var(--surface-1);
+  --toast-color: var(--body-fg);
+  --toast-border: var(--border-color);
+  --toast-header-bg: var(--surface-2);
+  --toast-header-color: var(--body-fg);
+
+  /* Variantes complementarias */
+  --bs-dark: #343a40;
+  --bs-dark-rgb: 52,58,64;
+  --bs-light: #f8f9fa;
+  --bs-light-rgb: 248,249,250;
+
+  /* Tertiary background */
+  --bs-tertiary-bg: var(--surface-2);
+
+  /* Subtle backgrounds y emphasis */
+  --bs-primary-bg-subtle: color-mix(in srgb, var(--bs-primary) 12%, transparent);
+  --bs-primary-text-emphasis: color-mix(in srgb, var(--bs-primary) 40%, black);
+  --bs-secondary-bg-subtle: color-mix(in srgb, var(--bs-secondary) 12%, transparent);
+  --bs-secondary-text-emphasis: color-mix(in srgb, var(--bs-secondary) 40%, black);
+  --bs-success-bg-subtle: color-mix(in srgb, var(--bs-success) 12%, transparent);
+  --bs-success-text-emphasis: color-mix(in srgb, var(--bs-success) 40%, black);
+  --bs-info-bg-subtle: color-mix(in srgb, var(--bs-info) 12%, transparent);
+  --bs-info-text-emphasis: color-mix(in srgb, var(--bs-info) 45%, black);
+  --bs-warning-bg-subtle: color-mix(in srgb, var(--bs-warning) 20%, white);
+  --bs-warning-text-emphasis: color-mix(in srgb, var(--bs-warning) 50%, black);
+  --bs-danger-bg-subtle: color-mix(in srgb, var(--bs-danger) 12%, transparent);
+  --bs-danger-text-emphasis: color-mix(in srgb, var(--bs-danger) 40%, black);
+  --bs-dark-bg-subtle: color-mix(in srgb, var(--neutral-900) 7%, white);
+  --bs-dark-text-emphasis: color-mix(in srgb, var(--neutral-900) 72%, black);
+
+  /* Navbar y overlay */
+  --navbar-bg: #131722;
+  --overlay-backdrop: rgba(0,0,0,.25);
 }
 
 html, body{

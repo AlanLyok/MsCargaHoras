@@ -24,7 +24,7 @@
             :root{ --navbar-h: 52px; --toolbar-h: 48px; }
             .loading-overlay { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 2000; }
             .loading-overlay.active { display: flex; }
-            .loading-overlay .loading-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.25); backdrop-filter: blur(1px); }
+            .loading-overlay .loading-backdrop { position: absolute; inset: 0; background: var(--overlay-backdrop); backdrop-filter: blur(1px); }
             .loading-overlay .loading-spinner { position: relative; z-index: 1; text-align: center; }
             /* Scroll interno para tablas dentro de cards */
             .grid-scroll { max-height: 60vh; overflow: auto; }
@@ -39,6 +39,10 @@
             .navbar .navbar-brand{ padding-top: 0; padding-bottom: 0; margin-right: .75rem; }
             .navbar .navbar-brand img{ height: 32px; }
             @media (min-width: 992px){ .navbar .navbar-brand img{ height: 34px; } }
+
+            /* Modo embebido para iframes de ayuda: oculta navbar y footer y ajusta padding */
+            body.embed .navbar, body.embed footer { display: none !important; }
+            body.embed .body-content { padding-top: 12px !important; }
 
             @media (max-width: 991.98px){
                 :root{ --navbar-h: 52px; --toolbar-h: 48px; }
@@ -94,17 +98,17 @@
                     </ul>
                     <div class="ms-auto d-flex align-items-center gap-3 flex-wrap">
                         <div class="d-flex align-items-center gap-2">
-                            <a class="btn btn-outline-light btn-sm" href="https://mastersoftlatam.sharepoint.com/sites/Desarrollo" target="_blank" rel="noopener noreferrer" title="Abrir SharePoint Desarrollo" data-bs-toggle="tooltip">
+                            <a class="btn btn-outline-light btn-sm" href="https://mastersoftlatam.sharepoint.com/sites/Desarrollo" target="_blank" rel="noopener noreferrer" title="Abrir SharePoint Desarrollo" data-bs-toggle="tooltip" onclick="return openExternal('https://mastersoftlatam.sharepoint.com/sites/Desarrollo');">
                                 <i class="bi bi-share" aria-hidden="true"></i>
                                 <span class="d-none d-sm-inline">SharePoint Desa</span>
                                 <span class="d-inline d-sm-none">SharePoint</span>
                             </a>
-                            <a class="btn btn-outline-light btn-sm" href="http://192.168.0.17/MSDocuments" target="_blank" rel="noopener noreferrer" title="Abrir Render DOC" data-bs-toggle="tooltip">
+                            <a class="btn btn-outline-light btn-sm" href="http://192.168.0.17/MSDocuments" target="_blank" rel="noopener noreferrer" title="Abrir Render DOC" data-bs-toggle="tooltip" onclick="return openExternal('http://192.168.0.17/MSDocuments');">
                                 <i class="bi bi-file-earmark-text" aria-hidden="true"></i>
                                 <span class="d-none d-sm-inline">Render DOC</span>
                                 <span class="d-inline d-sm-none">DOC</span>
                             </a>
-                            <a class="btn btn-outline-light btn-sm" href="https://webtools.mastersoft.com.ar/" target="_blank" rel="noopener noreferrer" title="Abrir Render WebTools" data-bs-toggle="tooltip">
+                            <a class="btn btn-outline-light btn-sm" href="https://webtools.mastersoft.com.ar/" target="_blank" rel="noopener noreferrer" title="Abrir Render WebTools" data-bs-toggle="tooltip" onclick="return openExternal('https://webtools.mastersoft.com.ar/');">
                                 <i class="bi bi-tools" aria-hidden="true"></i>
                                 <span class="d-none d-sm-inline">Render WebTools</span>
                                 <span class="d-inline d-sm-none">WebTools</span>
@@ -112,12 +116,12 @@
                         </div>
                         <div class="d-none small text-light">
                             <span class="opacity-75">Bienvenido</span>
-                            <asp:Label ID="lblNavbarNombre" runat="server" CssClass="badge bg-secondary-subtle text-dark ms-1" />
+                            <asp:Label ID="lblNavbarNombre" runat="server" CssClass="badge bg-secondary-subtle text-secondary-emphasis ms-1" />
                             <span class="badge bg-success ms-2">Legajo</span>
-                            <asp:Label ID="lblNavbarLegajo" runat="server" CssClass="badge bg-light text-dark ms-1" />
+                            <asp:Label ID="lblNavbarLegajo" runat="server" CssClass="badge bg-secondary-subtle text-secondary-emphasis ms-1" />
                         </div>
                         <div class="btn-group" role="group" aria-label="Toolbars">
-                            <button type="button" id="btnShowActionsBar" class="btn btn-outline-light btn-sm" title="Mostrar/Ocultar acciones">
+                        <button type="button" id="btnShowActionsBar" class="btn btn-outline-light btn-sm" title="Mostrar/Ocultar acciones">
                                 <i class="bi bi-bar-chart-steps"></i><span class="d-none d-md-inline ms-1"></span>
                             </button>
                             <button type="button" id="btnShowSearchBar" class="btn btn-outline-light btn-sm" title="Mostrar/Ocultar búsqueda">
@@ -140,7 +144,7 @@
                                             <img src="<%: ResolveUrl("~/Content/logoMS_Grande.png") %>" alt="Mastersoft" height="28" />
                                             
                                         </div>
-                                        <span class="badge bg-secondary-subtle text-dark" id="ddAppVersion">v-</span>
+                                        <span class="badge bg-secondary-subtle text-secondary-emphasis" id="ddAppVersion">v-</span>
                                     </div>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
@@ -207,6 +211,13 @@
                     try { localStorage.setItem(storageKey, next); } catch(e) {}
                 }
                 document.addEventListener('DOMContentLoaded', function(){
+                    // Detectar modo embebido (?embed=1 o dentro de un iframe)
+                    try{
+                        var params = new URLSearchParams(window.location.search);
+                        var isEmbed = params.get('embed') === '1';
+                        try{ if(window.self !== window.top) isEmbed = true; }catch(_){ isEmbed = true; }
+                        if(isEmbed && document.body){ document.body.classList.add('embed'); }
+                    }catch(_){ }
                     var t = current();
                     apply(t);
                     reflectIcon(t);
@@ -254,10 +265,8 @@
                           var chgUid = '<%= (MainContent.FindControl("btnCambiarUsuario") != null ? ((System.Web.UI.Control)MainContent.FindControl("btnCambiarUsuario")).UniqueID : "") %>';
                           if(btnChg){ btnChg.addEventListener('click', function(){ try{ if(chgUid){ __doPostBack(chgUid,''); } }catch(e){} }); }
                         }catch(ex){}
-                        // Inicializa tooltips navbar
-                        if(window.bootstrap){
-                             try{ var tts = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')); tts.forEach(function(el){ new bootstrap.Tooltip(el); }); }catch(e){}
-                        }
+                        // Tooltips deshabilitados de forma global
+                        try{ document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function(el){ el.removeAttribute('data-bs-toggle'); el.removeAttribute('title'); }); }catch(e){}
                         // Version desde Assembly
                         try{
                             var ver = '<%= typeof(MsCargaHoras.SiteMaster).Assembly.GetName().Version.ToString() %>';
@@ -338,6 +347,19 @@
                   document.addEventListener('DOMContentLoaded', applyToolbarOffsets);
                 }catch(e){}
             })();
+        </script>
+        <script type="text/javascript">
+            // Apertura directa en nueva pestaña; luego intentamos devolver el foco a la app
+            window.openExternal = function(url, name, features){
+                try{
+                    var opts = (features ? features + ',' : '') + 'noopener,noreferrer';
+                    var w = window.open(url, name || '_blank', opts);
+                    try{ if(w && w.blur){ w.blur(); } }catch(e){}
+                    try{ window.focus(); }catch(e){}
+                    try{ setTimeout(function(){ try{ window.focus(); }catch(_){} }, 100); }catch(e){}
+                }catch(e){}
+                return false;
+            };
         </script>
     </form>
 </body>

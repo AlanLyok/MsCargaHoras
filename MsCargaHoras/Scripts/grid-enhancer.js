@@ -243,8 +243,7 @@
     // Evitar que clicks dentro del menú lo cierren por el manejador global
     container.addEventListener('click', function(ev){ ev.stopPropagation(); });
     th.appendChild(container);
-    // Inicializa tooltips (opcional)
-    try{ if(window.bootstrap){ new bootstrap.Tooltip(btnAll); new bootstrap.Tooltip(btnNone); new bootstrap.Tooltip(btnClear); new bootstrap.Tooltip(btnClose); } }catch(e){}
+    // Tooltips deshabilitados globalmente
     return {container: container, list: list, search: search,
             getSelected: function(){ return Array.from(selectedSet); },
             updateValues: function(newVals){ allValues = (newVals||[]).slice(); renderList(); },

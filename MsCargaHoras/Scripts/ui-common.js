@@ -43,7 +43,10 @@
       wrapper.setAttribute('role','alert');
       wrapper.setAttribute('aria-live','assertive');
       wrapper.setAttribute('aria-atomic','true');
-      wrapper.innerHTML = '<div class="d-flex"><div class="toast-body"></div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>';
+      // Elegir color del botón de cerrado según tipo para buen contraste
+      var useWhiteClose = (bg==='danger' || bg==='primary' || bg==='dark' || (document.documentElement.getAttribute('data-theme')==='dark'));
+      var closeClass = useWhiteClose ? 'btn-close btn-close-white' : 'btn-close';
+      wrapper.innerHTML = '<div class="d-flex"><div class="toast-body"></div><button type="button" class="' + closeClass + ' me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>';
       wrapper.querySelector('.toast-body').textContent = message;
       container.appendChild(wrapper);
       try{
@@ -85,11 +88,13 @@
       if(!grid || grid._wrapped) return;
       var container = grid.closest('.table-responsive') || grid.parentElement;
       if(!container) return;
-      var outer = document.createElement('fieldset'); outer.className = 'card shadow-sm mb-3';
-      var legend = document.createElement('legend'); legend.className = 'card-header h5 mb-0'; legend.textContent = title || 'Datos';
+      // Si ya está dentro de una card, no envolver de nuevo
+      try{ if(container.closest('.card')){ grid._wrapped = true; return; } }catch(_){ }
+      var outer = document.createElement('div'); outer.className = 'card shadow-sm mb-3';
+      var header = document.createElement('div'); header.className = 'card-header h5 mb-0'; header.textContent = title || 'Datos';
       var body = document.createElement('div'); body.className = 'card-body';
       grid.parentElement.insertBefore(outer, container);
-      outer.appendChild(legend);
+      outer.appendChild(header);
       outer.appendChild(body);
       body.appendChild(container);
       grid._wrapped = true;

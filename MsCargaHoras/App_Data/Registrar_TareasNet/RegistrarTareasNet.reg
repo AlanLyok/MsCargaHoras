@@ -1,0 +1,18 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Classes\tareas]
+@="URL:tareas Protocol"
+"URL Protocol"=""
+
+[HKEY_CURRENT_USER\Software\Classes\tareas\DefaultIcon]
+@="C:\\MsDna\\RunNet.exe,1"
+
+[HKEY_CURRENT_USER\Software\Classes\tareas\shell]
+
+[HKEY_CURRENT_USER\Software\Classes\tareas\shell\open]
+
+; Lanza con carpeta de trabajo C:\MsDna y el argumento fijo del share
+[HKEY_CURRENT_USER\Software\Classes\tareas\shell\open\command]
+@="mshta vbscript:CreateObject(\"WScript.Shell\").Run(\"C:\\\\MsDna\\\\RunNet.exe \\\\\\MSWINPFL01\\\\Datos\\\\archcli\\\\TareasNet2IP.UPD\",0)(close)"
+
+

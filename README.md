@@ -17,6 +17,16 @@ Sitio interno de Carga de Horas basado en ASP.NET WebForms (.NET Framework 4.8).
 - **Accesos TRAC y actividades**: botones para ver ticket, crear ticket, consultar horas de ticket, consultar actividad y ver timelines por autor TRAC.
 - **Mejoras de UI**: tarjetas con scroll interno, encabezados estandarizados, búsqueda global sincronizada y theming claro/oscuro persistente.
 
+## UI y Design System
+- **Tokens y temas**: todo el color, superficies, tipografías y estados se derivan de `MsCargaHoras/Content/tokens.css`, con variantes Light/Dark por `prefers-color-scheme` y `:root[data-theme]`. El toggler de tema está en `Site.Master`.
+- **Unificación de cards**: se migró el patrón `fieldset+legend` a markup nativo `.card` en `MsCargaHoras/Default.aspx` para semántica y consistencia. Las nuevas vistas deben usar `.card`.
+- **Patrones listos**: ver `docs/Patrones-UI.md` (card+tabla, botones, formularios, tabs, toasts/dropdowns/modales, utilidades).
+- **Botones “soft”**: usar `.btn-soft-primary|secondary|success|info|warning|danger` para acciones de baja prominencia; sólidos/outline para primarias/secundarias.
+- **Tablas**: siempre dentro de `.card` y envueltas en `.table-responsive.grid-scroll`. Los estilos de header/hover/striped usan tokens y funcionan en Light/Dark.
+- **Tooltips**: deshabilitados globalmente por ahora. Feedback mediante toasts (`UiCommon.showToast`).
+- **Bundling de estilos**: `~/Content/css` incluye `bootstrap.min.css`, `tokens.css` y `app.css`. Se removió `Content/Site.css` del bundle para evitar estilos legacy.
+- **Documentación de inventario**: `docs/Inventario-UI.md` lista componentes presentes y su mapeo a tokens.
+
 ## Requisitos
 - Windows con Visual Studio 2022 (workload de ASP.NET y web) o Build Tools 2022.
 - Targeting Pack de .NET Framework 4.8.
@@ -40,6 +50,19 @@ Sitio interno de Carga de Horas basado en ASP.NET WebForms (.NET Framework 4.8).
 - En Resumen, seleccionar un día para sincronizar la fecha y ver Horas Sugeridas y el detalle del día en Carga de Horas.
 - En Carga de Horas, revisar el detalle leído para la fecha actual. La edición es local y no persiste en base todavía.
 - En Tareas Pendientes, seleccionar fuente (TRAC/Actividades/Todas) y usar los accesos rápidos a tickets/actividades.
+
+### Apertura de TareasNet (WinForms) desde la web
+- El botón “TareasNet” intenta abrir el protocolo personalizado `tareas://abrir`.
+- Flujo:
+  1) Si la PC ya tiene instalado el protocolo → se abre el sistema sin mostrar consola.
+  2) Si no está instalado → se abre la página de ayuda (no descarga automáticamente).
+  3) En la ayuda hay un link que descarga `App_Data/Registrar_TareasNet.zip`.
+- Contenido de `Registrar_TareasNet.zip` (instalación per-user):
+  - `Registrar_TareasNet/RegistrarTareasNet.reg` y `Registrar_TareasNet/DesRegistrarTareasNet.reg`.
+  - El `.reg` registra `HKCU\Software\Classes\tareas` y el comando:
+    - `mshta vbscript:CreateObject("WScript.Shell").Run("cmd.exe /c start """" /D ""C:\\MsDna"" ""\\\\MSWINPFL01\\Datos\\archcli\\TareasNet2IP.UPD""",0)(close)`
+    - Esto inicia el UPD con “Iniciar en: C:\MsDna” (evita que la app busque recursos en `C:\Windows\System32`) y no muestra consola.
+- Desinstalación: ejecutar `Registrar_TareasNet/DesRegistrarTareasNet.reg`.
 
 ## Stores utilizados (resumen)
 - LABTRAC: `AGLTRAC_BuscarHsPendientesDeCarga`, `AGLTRAC_ObtenerTareasAsignadas`, `AGLTRAC_ObtenerLegajosUsuarios`.

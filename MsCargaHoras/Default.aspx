@@ -13,9 +13,24 @@
                     <button type="button" class="btn btn-primary btn-sm d-inline-flex align-items-center gap-1" onclick="return abrirVistaPreviaTicket();"><i class="bi bi-eye-fill"></i><span class="d-none d-sm-inline">Ver Ticket</span></button>
                     <button type="button" class="btn btn-soft-primary btn-soft btn-sm d-inline-flex align-items-center gap-1" onclick="return abrirConsultaTicket();"><i class="bi bi-search"></i><span class="d-none d-sm-inline">Horas Ticket</span></button>
                     <button type="button" class="btn btn-soft-success btn-soft btn-sm d-inline-flex align-items-center gap-1" onclick="return abrirNuevoTicket();"><i class="bi bi-plus-circle"></i><span class="d-none d-sm-inline">Nuevo Ticket</span></button>
-                    <button type="button" class="btn btn-soft-info btn-soft btn-sm d-inline-flex align-items-center gap-1" onclick="return abrirConsultaActividad();"><i class="bi bi-clipboard-check"></i><span class="d-none d-sm-inline">Ver Actividad</span></button>
+                    <button type="button" class="btn btn-soft-info btn-soft btn-sm d-inline-flex align-items-center gap-1" onclick="return abrirConsultaActividad();"><i class="bi bi-clipboard-check"></i><span class="d-none d-sm-inline">Info Actividad</span></button>
                     <button type="button" class="btn btn-soft-warning btn-soft btn-sm d-inline-flex align-items-center gap-1" onclick="return abrirTimelineTickets();"><i class="bi bi-list-task"></i><span class="d-none d-sm-inline">Historial TRAC</span></button>
                     <button type="button" class="btn btn-soft-secondary btn-soft btn-sm d-inline-flex align-items-center gap-1" onclick="return abrirTimelineTrac();"><i class="bi bi-git"></i><span class="d-none d-sm-inline">Commits SVN</span></button>
+                    <a class="btn btn-outline-secondary btn-sm" href="https://mastersoftlatam.sharepoint.com/sites/Desarrollo" target="_blank" rel="noopener noreferrer" title="Abrir SharePoint Desarrollo" data-bs-toggle="tooltip" onclick="return openExternal('https://mastersoftlatam.sharepoint.com/sites/Desarrollo');">
+                        <i class="bi bi-share" aria-hidden="true"></i>
+                        <span class="d-none d-sm-inline">SharePoint Desa</span>
+                        <span class="d-inline d-sm-none">SharePoint</span>
+                    </a>
+                    <a class="btn btn-outline-secondary btn-sm" href="http://192.168.0.17/MSDocuments" target="_blank" rel="noopener noreferrer" title="Abrir Render DOC" data-bs-toggle="tooltip" onclick="return openExternal('http://192.168.0.17/MSDocuments');">
+                        <i class="bi bi-file-earmark-text" aria-hidden="true"></i>
+                        <span class="d-none d-sm-inline">Render DOC</span>
+                        <span class="d-inline d-sm-none">DOC</span>
+                    </a>
+                    <a class="btn btn-outline-secondary btn-sm" href="https://webtools.mastersoft.com.ar/" target="_blank" rel="noopener noreferrer" title="Abrir Render WebTools" data-bs-toggle="tooltip" onclick="return openExternal('https://webtools.mastersoft.com.ar/');">
+                        <i class="bi bi-tools" aria-hidden="true"></i>
+                        <span class="d-none d-sm-inline">Render WebTools</span>
+                        <span class="d-inline d-sm-none">WebTools</span>
+                    </a>
                     <div class="d-inline-flex align-items-center gap-2">
                         <button type="button" class="btn btn-soft-dark btn-soft btn-sm d-inline-flex align-items-center gap-1" onclick="return abrirTareasNet();"><i class="bi bi-windows"></i><span class="d-none d-sm-inline">TareasNet</span></button>
                     </div>
@@ -45,7 +60,7 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="carga-tab" data-bs-toggle="tab" data-bs-target="#tab-carga" type="button" role="tab" aria-controls="tab-carga" aria-selected="false">Carga de Horas</button>
             </li>
-            <li class="nav-item" role="presentation">
+            <li class="nav-item d-none" role="presentation">
                 <button class="nav-link" id="trac-tab" data-bs-toggle="tab" data-bs-target="#tab-trac" type="button" role="tab" aria-controls="tab-trac" aria-selected="false">Tareas Pendientes</button>
             </li>
         </ul>
@@ -438,7 +453,7 @@
                     }
                 </script>
             </div>
-            <div class="tab-pane fade" id="tab-trac" role="tabpanel" aria-labelledby="trac-tab" tabindex="0">
+            <div class="tab-pane fade d-none" id="tab-trac" role="tabpanel" aria-labelledby="trac-tab" tabindex="0">
                 <div class="row g-3 mt-3">
                     <div class="col-12">
                         <div class="card shadow-sm">
@@ -502,6 +517,7 @@
                 }
                 document.addEventListener('DOMContentLoaded', function () {
                     var saved = hidden && hidden.value ? hidden.value : localStorage.getItem(storageKey);
+                    if (saved === '#tab-trac') { saved = '#tab-faltantes'; }
                     if (saved) activate(saved);
                     try{
                         // Mostrar modal de login si no hay usuario guardado

@@ -77,6 +77,36 @@ Usar tabs Bootstrap; el color activo usa `--bs-nav-tabs-link-active-*`.
 - Espaciado: escala `--sp-*` y utilidades `gap-*`, `p-*`, `m-*`.
 - Avatar: `.avatar-circle` disponible para iniciales de usuario.
 
+### Kanban (simple)
+- Columnas como tarjetas con header y lista de tarjetas internas.
+- Drag & Drop nativo en el navegador; persistencia de columna por tarjeta en `localStorage`.
+ - Orden manual por columna: la posición se guarda por usuario y se reaplica en cada carga.
+
+Estructura:
+```html
+<div class="kanban-board">
+  <div class="kanban-col">
+    <div class="kanban-col-header">Por hacer</div>
+    <div class="kanban-list">
+      <div class="kanban-card" draggable="true">
+        <div class="title"><a href="#" target="_blank">#123 | Título</a></div>
+        <div class="meta">
+          <span class="badge bg-secondary-subtle text-secondary-emphasis">TRAC</span>
+          <span>Cliente</span>
+          <span>Proyecto</span>
+          <span class="text-nowrap">01/01/2025 12:00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+Buenas prácticas:
+- Usar badges sutiles para tipo/fuente.
+- Limitar altura de columnas y permitir scroll interno.
+- Respetar tokens para color en light/dark.
+
 ### Rendimiento y escalabilidad
 - Todo el theming es por CSS variables, lo que evita recalcular muchas reglas entre temas.
 - Reutilizar los patrones STL (card + tabla, toolbar de acciones) reduce CSS específico y JS personalizado.

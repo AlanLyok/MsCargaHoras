@@ -27,7 +27,18 @@
     var thead = tbl.tHead; if(!thead || thead.rows.length === 0){ return; }
     var headerRow = thead.rows[0];
 
-    // Create or reuse summary badge for active filters
+    // Capturar universo completo de valores por columna (sin filtros) una única vez
+    try{
+      if(!tbl._allValues){
+        tbl._allValues = [];
+        Array.prototype.forEach.call(headerRow.cells, function(_th, idx){
+          // Mantener todas las opciones originales (sin limitar por visibles)
+          tbl._allValues[idx] = buildUniqueValues(tbl, idx, false);
+        });
+      }
+    }catch(e){}
+
+    // Create or reuse summary badge for active filters + result count
     var badge = tbl._filterBadge;
     if(!badge){
       badge = document.createElement('div');
@@ -36,10 +47,16 @@
       var btnClearAll = document.createElement('button'); btnClearAll.type='button'; btnClearAll.className='btn btn-sm btn-outline-secondary'; btnClearAll.innerHTML='<i class="bi bi-eraser"></i>'; btnClearAll.title='Limpiar todos los filtros'; btnClearAll.setAttribute('data-bs-toggle','tooltip');
       btnClearAll.addEventListener('click', function(ev){ ev.preventDefault(); ev.stopPropagation(); try{ clearAllFilters(tbl); }catch(e){} });
       var txt = document.createElement('span'); txt.className='me-1';
+      var sep = document.createElement('span'); sep.textContent = '·'; sep.className='mx-1 opacity-50';
+      var results = document.createElement('span'); results.className='badge bg-secondary-subtle text-secondary-emphasis'; results.textContent = '0';
       // Botón a la izquierda para evitar movimiento cuando cambia el texto
       badge.appendChild(btnClearAll);
       badge.appendChild(txt);
+      badge.appendChild(sep);
+      var resLbl = document.createElement('span'); resLbl.textContent = 'Resultados:'; resLbl.className='me-1'; badge.appendChild(resLbl);
+      badge.appendChild(results);
       badge._txt = txt; badge._btnClearAll = btnClearAll;
+      badge._results = results;
       // Insertar en cabecera de card si existe, de lo contrario antes de la tabla
       try{
         var card = tbl.closest('.card');
@@ -120,7 +137,7 @@
   }
 
   function enhanceAll(){
-    var tables = document.querySelectorAll('#tabsCargaHorasContent table.table:not(.ge-no)');
+    var tables = document.querySelectorAll('table.table:not(.ge-no)');
     tables.forEach(function(tbl){ try{ if(window.UiCommon){ UiCommon.standardizeGridView(tbl); } }catch(e){} enhanceTable(tbl); });
   }
 
@@ -128,7 +145,7 @@
   var currentGlobalQuery = '';
   function applyGlobalFilter(query){
     currentGlobalQuery = (query||'').toLowerCase();
-    var tables = document.querySelectorAll('#tabsCargaHorasContent table.table:not(.ge-no)');
+    var tables = document.querySelectorAll('table.table:not(.ge-no)');
     tables.forEach(function(tbl){ applyAllFiltersOnTable(tbl); });
   }
 
@@ -148,7 +165,7 @@
       // Guardar preferencia
       try{ localStorage.setItem('ge:fuente', val); }catch(e){}
       // Para cada tabla, aplicar filtro de columna "Fuente"
-      var tables = document.querySelectorAll('#tabsCargaHorasContent table.table');
+      var tables = document.querySelectorAll('table.table');
       tables.forEach(function(tbl){
         try{
           var thead = tbl.tHead; if(!thead) return; var headerRow = thead.rows[0]; if(!headerRow) return;
@@ -290,6 +307,7 @@
   function applyAllFiltersOnTable(tbl){
     var rows = tbl.tBodies[0] ? tbl.tBodies[0].rows : [];
     var filters = tbl._filters || {};
+    var visibleCount = 0;
     Array.prototype.forEach.call(rows, function(r){
       // global query
       var matchGlobal = true;
@@ -303,20 +321,25 @@
       // column filters (AND)
       var matchCols = true;
       for(var col in filters){ if(!filters.hasOwnProperty(col)) continue; var arr = filters[col]; if(!arr || arr.length===0) continue; var cellTxt = (r.cells[col] ? r.cells[col].textContent : ''); if(arr.indexOf(cellTxt)===-1){ matchCols = false; break; } }
-      r.style.display = (matchGlobal && matchCols) ? '' : 'none';
+      var vis = (matchGlobal && matchCols);
+      r.style.display = vis ? '' : 'none';
+      if(vis) visibleCount++;
     });
     // Update badge with active filters count
     var activeCols = 0; for(var k in filters){ if(filters.hasOwnProperty(k) && filters[k] && filters[k].length>0) activeCols++; }
     if(tbl._filterBadge){
       if(activeCols>0){
         tbl._filterBadge.style.display = '';
-        if(tbl._filterBadge._txt){ tbl._filterBadge._txt.textContent = 'Filtros activos: ' + activeCols; }
+        if(tbl._filterBadge._txt){ tbl._filterBadge._txt.textContent = 'Filtros: ' + activeCols; }
       } else {
         if(tbl._filterBadge._txt){ tbl._filterBadge._txt.textContent = ''; }
         // ocultar y asegurar que el tooltip no quede colgado
         if(tbl._filterBadge._btnClearAll && tbl._filterBadge._btnClearAll._tt){ try{ tbl._filterBadge._btnClearAll._tt.hide(); }catch(e){} }
-        tbl._filterBadge.style.display = 'none';
+        // Mantener visible si queremos mostrar resultados aunque no haya filtros
+        tbl._filterBadge.style.display = '';
       }
+      // Resultados visibles
+      if(tbl._filterBadge._results){ tbl._filterBadge._results.textContent = String(visibleCount); }
       // Inicializar tooltip una sola vez
       try{
         if(window.bootstrap && tbl._filterBadge._btnClearAll && !tbl._filterBadge._btnClearAll._tt){
@@ -325,17 +348,7 @@
       }catch(e){}
     }
 
-    // Update each column menu list to reflect current visible rows (filters auto-filter among themselves)
-    try{
-      var thead = tbl.tHead; if(!thead) return; var headerRow = thead.rows[0]; if(!headerRow) return;
-      Array.prototype.forEach.call(headerRow.cells, function(th, idx){
-        if(th._menu && th._menu.updateValues){
-          var vals = buildUniqueValues(tbl, idx, true);
-          if(!vals || vals.length===0){ vals = buildUniqueValues(tbl, idx, false); }
-          th._menu.updateValues(vals);
-        }
-      });
-    }catch(e){}
+    // No modificar el universo del menú: debe mantener todas las opciones originales
   }
 
   function clearAllFilters(tbl){
@@ -398,7 +411,13 @@
       }
       // store menu reference for later updates
       th._menu = menu; menu._tbl = tbl; menu._col = colIndex;
-      btn.addEventListener('click', function(ev){ ev.stopPropagation(); toggleMenu(th, menu); });
+      btn.addEventListener('click', function(ev){ ev.stopPropagation();
+        // Siempre presentar el universo completo original de la columna
+        try{
+          if(tbl._allValues && tbl._allValues[colIndex] && menu.updateValues){ menu.updateValues(tbl._allValues[colIndex]); }
+        }catch(e){}
+        toggleMenu(th, menu);
+      });
     });
     function onDocPointer(e){
       var isInsideMenu = !!e.target.closest('.filter-menu');
@@ -421,7 +440,10 @@
   }catch(e){}
 
   // Export simple API for future use
-  global.GridEnhancer = { enhance: enhanceTable, enhanceAll: enhanceAll, filter: applyGlobalFilter };
+  // Utilidad: envolver en card y mejorar en un paso
+  function wrapAndEnhance(grid, title){ try{ if(window.UiCommon){ UiCommon.wrapGridInCard(grid, title||'Datos'); } }catch(e){} enhanceTable(grid); }
+
+  global.GridEnhancer = { enhance: enhanceTable, enhanceAll: enhanceAll, filter: applyGlobalFilter, wrapAndEnhance: wrapAndEnhance };
 
 })(window);
 

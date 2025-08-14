@@ -136,7 +136,7 @@ BEGIN
       ''https://desarrollo.mastersoft.com.ar/DatosActividad/?ActividadID='' + CAST(AC.ActividadID AS VARCHAR(20)) AS Link,
       LEFT(CAST(AC.ActividadID AS VARCHAR(20)) + ''|'' + AC.Descripcion + '' |'' + LTRIM(RTRIM(PR.Descripcion)) + '' | '' + CL.RazonSocial, 255) AS Titulo,
       LTRIM(RTRIM(CL.RazonSocial)) AS Cliente,
-      CAST(PR.Nrodoc AS VARCHAR(20)) + '' - '' + PR.Descripcion AS Proyecto,
+      CAST(PR.Nrodoc AS VARCHAR(20)) + PR.Descripcion AS Proyecto,
       ''Actividad'' AS Tipo,
       DATEADD(HOUR,12, AC.FechaInicio)       AS FechaInicio,
       DATEADD(HOUR,12, AC.FechaComprometida) AS FechaComprometida,

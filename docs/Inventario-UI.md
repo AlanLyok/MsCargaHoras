@@ -115,6 +115,12 @@ Documento para inventariar todos los elementos de UI del sitio, agruparlos por t
 - `asp:TextBox`, `asp:DropDownList`, `asp:Button`, `asp:Label`, `asp:HiddenField`, `asp:Panel`.
 - `friendlyUrls:ViewSwitcher` (en `Site.Mobile.Master`).
 
+### Kanban
+- Página: `MsCargaHoras/Kanban.aspx`.
+- Datos: `asp:SqlDataSource` con `AGLTRAC_ObtenerTareasAsignadas` + `asp:Repeater` oculto para materializar tarjetas.
+- Interacción: Drag & Drop nativo + persistencia de columna por tarjeta en `localStorage`. Orden manual por columna con reaplicación en carga.
+- Estilos: clases `.kanban-board`, `.kanban-col`, `.kanban-list`, `.kanban-card` (tokens compatibles light/dark).
+
 ### Componente de grilla editable (3rd-party)
 - Tabulator (en preparación)
   - CSS/JS referenciados en la pestaña "Carga" para `#gridHorasReales`.
@@ -132,9 +138,9 @@ Documento para inventariar todos los elementos de UI del sitio, agruparlos por t
   - Loading overlay: `Site.Master` + `ui-common.js`.
 
 - Datos
-  - GridView: `Default.aspx` (4 grillas), `TestLABTRAC.aspx` (1 grilla).
+  - GridView: `Default.aspx` (4 grillas), `TestLABTRAC.aspx` (1 grilla) y `Kanban.aspx` (vista grilla).
   - Paginación: `PagerStyle CssClass="pagination"` (en `grdSugeridas`).
-  - Filtros por columna/orden: `grid-enhancer.js`.
+  - Filtros por columna/orden: `grid-enhancer.js` (aplicado también en la grilla de `Kanban.aspx`).
 
 - Formularios
   - Inputs y selects: `Default.aspx`, `TestLABTRAC.aspx`.

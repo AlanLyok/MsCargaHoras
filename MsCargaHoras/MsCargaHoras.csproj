@@ -124,6 +124,7 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Default.aspx" />
+    <Content Include="Kanban.aspx" />
     <Content Include="AyudaTareasNet.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -211,6 +212,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Kanban.aspx.cs">
+      <DependentUpon>Kanban.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Kanban.aspx.designer.cs">
+      <DependentUpon>Kanban.aspx</DependentUpon>
     </Compile>
     <Compile Include="AyudaTareasNet.aspx.cs">
       <DependentUpon>AyudaTareasNet.aspx</DependentUpon>

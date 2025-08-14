@@ -7,6 +7,7 @@ Sitio interno de Carga de Horas basado en ASP.NET WebForms (.NET Framework 4.8).
 - **Datos**: SQL Server vía procedimientos almacenados en LABTRAC y TareasNetMs. Resolución de usuario/legajo desde LABTRAC. Linked server a TRAC para vistas relacionadas.
 - **Sesión**: login simple por filtro (legajo, nombre, usuario o mail). La sesión se persiste en servidor y se refuerza con cookie `ms_login` protegida.
 - **UI**: tabs principales (Resumen, Carga de Horas, Tareas Pendientes) y una vista auxiliar de Horas Sugeridas. Theming claro/oscuro, toasts, overlay de carga, toolbars fijas para acciones y búsqueda global.
+ - **Kanban**: página dedicada (`Kanban.aspx`) que muestra tarjetas a partir de "Tareas Pendientes" y permite moverlas entre columnas (Backlog, Por hacer, En curso, En pruebas, Hecho). Persistencia local de estado por usuario (localStorage).
 
 ## Funcionalidades actuales
 - **Login y sesión**: ingreso por filtro; persistencia en `Session` y cookie protegida. Botones de Cambiar usuario/Log Out en la navbar.
@@ -14,6 +15,7 @@ Sitio interno de Carga de Horas basado en ASP.NET WebForms (.NET Framework 4.8).
 - **Horas Sugeridas**: consulta `AGLTRAC_ObtenerHorasSugeridas` y muestra un TOP acotado. Paginación y orden disponibles.
 - **Carga de Horas (modo consulta)**: lectura del detalle del día desde TareasNetMs con `AGLTRAC_HorasDet_Obtener`. Precarga de catálogos en sesión (Tipos de Doc., Tipos de Tarea, Clientes/Proyectos). Edición local provisional (sin persistencia en base aún).
 - **Tareas Pendientes**: consulta `AGLTRAC_ObtenerTareasAsignadas` (fuentes TRAC/Actividades/Todas). Selección de ticket para accesos rápidos.
+ - **Kanban**: reutiliza `AGLTRAC_ObtenerTareasAsignadas` y distribuye tarjetas en columnas. El estado de columna por tarjeta se guarda localmente por usuario.
 - **Accesos TRAC y actividades**: botones para ver ticket, crear ticket, consultar horas de ticket, consultar actividad y ver timelines por autor TRAC.
 - **Mejoras de UI**: tarjetas con scroll interno, encabezados estandarizados, búsqueda global sincronizada y theming claro/oscuro persistente.
 
@@ -21,6 +23,7 @@ Sitio interno de Carga de Horas basado en ASP.NET WebForms (.NET Framework 4.8).
 - **Tokens y temas**: todo el color, superficies, tipografías y estados se derivan de `MsCargaHoras/Content/tokens.css`, con variantes Light/Dark por `prefers-color-scheme` y `:root[data-theme]`. El toggler de tema está en `Site.Master`.
 - **Unificación de cards**: se migró el patrón `fieldset+legend` a markup nativo `.card` en `MsCargaHoras/Default.aspx` para semántica y consistencia. Las nuevas vistas deben usar `.card`.
 - **Patrones listos**: ver `docs/Patrones-UI.md` (card+tabla, botones, formularios, tabs, toasts/dropdowns/modales, utilidades).
+ - **Kanban**: columnas responsivas con `.card` y tarjetas con badges sutiles; drag & drop nativo. Usa tokens para light/dark.
 - **Botones “soft”**: usar `.btn-soft-primary|secondary|success|info|warning|danger` para acciones de baja prominencia; sólidos/outline para primarias/secundarias.
 - **Tablas**: siempre dentro de `.card` y envueltas en `.table-responsive.grid-scroll`. Los estilos de header/hover/striped usan tokens y funcionan en Light/Dark.
 - **Tooltips**: deshabilitados globalmente por ahora. Feedback mediante toasts (`UiCommon.showToast`).
